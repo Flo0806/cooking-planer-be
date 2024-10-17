@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -32,5 +33,15 @@ export class RecipeController {
     @Body() body: RecipeBody, // Restliche Rezeptdaten
   ) {
     return this.recipeService.createRecipe(body, image); // Ohne Bild
+  }
+
+  @Patch(':id')
+  @UseInterceptors(FileInterceptor('image'))
+  async updateRecipe(
+    @Param('id') id: string,
+    @UploadedFile() image: Express.Multer.File, // Das hochgeladene Bild
+    @Body() body: RecipeBody, // Restliche Rezeptdaten
+  ) {
+    return this.recipeService.updateRecipe(id, body, image); // Ohne Bild
   }
 }

@@ -31,11 +31,35 @@ export class RecipeService {
     return recipe;
   }
 
+  /**
+   * Erstellt ein neues Rezept und gibt es zurück
+   * @param recipe
+   * @param file
+   * @returns
+   */
   async createRecipe(recipe: RecipeBody, file?: Express.Multer.File) {
     const newRecipe = this.recipeRepo.create(recipe);
     if (file) {
       newRecipe.image = file.filename;
     }
     return await this.recipeRepo.save(newRecipe, { reload: true });
+  }
+
+  async updateRecipe(
+    id: string,
+    recipe: RecipeBody,
+    file?: Express.Multer.File,
+  ) {
+    const getRecipe = await this.recipeRepo.findOne({ where: { id } });
+    if (!getRecipe) {
+      throw new NotFoundException(`Recipe with id '${id}' was not found`);
+    }
+
+    const updateRecipe = { ...getRecipe, ...recipe };
+    if (file) {
+      updateRecipe.image = file.filename;
+    }
+
+    return await this.recipeRepo.save(updateRecipe, { reload: true });
   }
 }
