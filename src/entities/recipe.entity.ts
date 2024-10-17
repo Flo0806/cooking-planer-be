@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { WeekDay } from './week-day.entity';
 
-@Entity('recipes') // Tabelle wird "recipes" genannt
+@Entity() // Tabelle wird "recipes" genannt
 export class Recipe {
   @PrimaryGeneratedColumn('uuid') // UUID als Primärschlüssel
   id: string;
@@ -11,11 +12,11 @@ export class Recipe {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  image: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  image?: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  preparationTime: string;
+  @Column({ type: 'int', default: 10 })
+  preparationTime: number;
 
   @Column({ type: 'varchar', length: 50 })
   category: string;
@@ -24,5 +25,9 @@ export class Recipe {
   rating: number;
 
   @Column({ type: 'varchar', length: 50 })
-  difficulty: string;
+  difficulty: number;
+
+  // Beziehung zu WeekDay (Ein Rezept kann zu mehreren WeekDays gehören)
+  @OneToMany(() => WeekDay, (weekday) => weekday.recipe, { cascade: true })
+  weekDays: WeekDay[];
 }
