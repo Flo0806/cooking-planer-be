@@ -24,7 +24,7 @@ export class Recipe {
   @Column({ type: 'int' })
   rating: number;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'int', default: 1 })
   difficulty: number;
 
   // Beziehung zu WeekDay (Ein Rezept kann zu mehreren WeekDays gehören)
