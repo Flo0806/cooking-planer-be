@@ -2,13 +2,16 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Recipe } from './entities/Recipe.Entity';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { WeekController } from './week/week.controller';
 import { WeekService } from './week/week.service';
+import { WeekDay } from './entities/week-day.entity';
+import { Recipe } from './entities/recipe.entity';
+import { RecipeModule } from './recipe/recipe.module';
 
 @Module({
   imports: [
+    RecipeModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost', // Der Hostname, der im Docker-Compose-File angegeben ist
@@ -16,11 +19,14 @@ import { WeekService } from './week/week.service';
       username: 'app', // Der Benutzername aus der Docker-Konfiguration
       password: 'app', // Das Passwort aus der Docker-Konfiguration
       database: 'cooking-planer', // Der Name der Datenbank
-      entities: [Recipe], // Importiere das Recipe-Entity
-      synchronize: true, // Synchronisiert das Schema automatisch (nur in Entwicklung verwenden)
+      //entities: [__dirname + '/**/*.entity{.ts,.js}'], // Importiere das Recipe-Entity
+      entities: [Recipe, WeekDay],
+      timezone: 'local',
       namingStrategy: new SnakeNamingStrategy(),
+      synchronize: true, // Synchronisiert das Schema automatisch (nur in Entwicklung verwenden)
     }),
-    TypeOrmModule.forFeature([Recipe]), // Importiere das Recipe-Entity in das Modul],
+    TypeOrmModule.forFeature([WeekDay, Recipe]),
+    RecipeModule, // Importiere das Recipe-Entity in das Modul],
   ],
   controllers: [AppController, WeekController],
   providers: [AppService, WeekService],
