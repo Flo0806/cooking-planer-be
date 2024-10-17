@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -12,6 +14,16 @@ import { RecipeBody } from 'src/common/interfaces/body.interface';
 @Controller('recipe')
 export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
+
+  @Get('recipes')
+  async getAllRecipes() {
+    return await this.recipeService.getAllRecipes();
+  }
+
+  @Get(':id')
+  async getRecipeById(@Param('id') recipeId: string) {
+    return await this.recipeService.getRecipeById(recipeId);
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
