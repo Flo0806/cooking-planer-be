@@ -8,10 +8,16 @@ import { WeekService } from './week/week.service';
 import { WeekDay } from './entities/week-day.entity';
 import { Recipe } from './entities/recipe.entity';
 import { RecipeModule } from './recipe/recipe.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
+console.log('HIER', __dirname);
 @Module({
   imports: [
-    RecipeModule,
+    ServeStaticModule.forRoot({
+      serveRoot: '/uploads',
+      rootPath: join(__dirname, '..', 'uploads'),
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost', // Der Hostname, der im Docker-Compose-File angegeben ist
@@ -26,7 +32,7 @@ import { RecipeModule } from './recipe/recipe.module';
       synchronize: true, // Synchronisiert das Schema automatisch (nur in Entwicklung verwenden)
     }),
     TypeOrmModule.forFeature([WeekDay, Recipe]),
-    RecipeModule, // Importiere das Recipe-Entity in das Modul],
+    RecipeModule, // Importiere das Recipe-Entity in das Modul
   ],
   controllers: [AppController, WeekController],
   providers: [AppService, WeekService],
