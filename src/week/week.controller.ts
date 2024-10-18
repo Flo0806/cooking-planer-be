@@ -6,8 +6,8 @@ import { WeekService } from './week.service';
 export class WeekController {
   constructor(private readonly weekService: WeekService) {}
 
-  @Get()
-  async getWeeks(): Promise<WeekDay[][]> {
+  @Get('weeks')
+  async getWeeks() {
     return this.weekService.getWeeks();
   }
 }
