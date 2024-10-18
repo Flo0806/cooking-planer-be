@@ -15,15 +15,15 @@ export class WeekDay {
   // Wir müssen ein reines date Objekt konvertieren: https://github.com/typeorm/typeorm/issues/2176
   // Nur datetime Objekte werden korrekt in ein Date konvertiert
   @Column({
-    type: 'date',
-    transformer: {
-      to(value: Date): Date {
-        return value; // Beim Speichern keine Änderung
-      },
-      from(value: string): Date {
-        return new Date(value); // Beim Lesen aus der DB: String zu Date umwandeln
-      },
-    },
+    type: 'datetime',
+    // transformer: {
+    //   to(value: Date): Date {
+    //     return value; // Beim Speichern keine Änderung
+    //   },
+    //   from(value: string): Date {
+    //     return new Date(value); // Beim Lesen aus der DB: String zu Date umwandeln
+    //   },
+    // },
   }) // Datum für jeden Tag
   date: Date;
 
