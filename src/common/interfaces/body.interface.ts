@@ -7,3 +7,7 @@ export interface RecipeBody {
   preparationTime: number;
   category: string;
 }
+
+export interface WeekRecipeBody {
+  recipeId: string;
+}

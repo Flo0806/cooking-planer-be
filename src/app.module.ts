@@ -27,7 +27,7 @@ console.log('HIER', __dirname);
       database: 'cooking-planer', // Der Name der Datenbank
       //entities: [__dirname + '/**/*.entity{.ts,.js}'], // Importiere das Recipe-Entity
       entities: [Recipe, WeekDay],
-      timezone: 'local',
+      timezone: 'Z',
       namingStrategy: new SnakeNamingStrategy(),
       synchronize: true, // Synchronisiert das Schema automatisch (nur in Entwicklung verwenden)
     }),
