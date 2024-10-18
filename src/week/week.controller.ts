@@ -1,5 +1,4 @@
 import { Controller, Get } from '@nestjs/common';
-import { WeekDay } from 'src/entities/week-day.entity';
 import { WeekService } from './week.service';
 
 @Controller('week')
