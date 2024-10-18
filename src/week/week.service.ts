@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WeekRecipeBody } from 'src/common/interfaces/body.interface';
 import { WeekData } from 'src/common/interfaces/response.interface';
 import { WeekDay } from 'src/entities/week-day.entity';
+import { RecipeService } from 'src/recipe/recipe.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class WeekService {
   constructor(
+    private recipeService: RecipeService,
     @InjectRepository(WeekDay) private weekdayRepository: Repository<WeekDay>,
   ) {}
 
@@ -34,6 +37,40 @@ export class WeekService {
     const transformedNextWeek = this.transformToWeekData(nextWeek);
 
     return [transformedCurrentWeek, transformedNextWeek];
+  }
+
+  /**
+   * Verknüpft ein vorhandenes Rezept mit einem Wochentag
+   * @param date
+   * @param data
+   * @returns
+   */
+  async addRecipeToWeekDay(date: Date, data: WeekRecipeBody) {
+    const tryFindWeekDay = await this.weekdayRepository.findOne({
+      where: { date },
+    });
+
+    // Normal kann die Woche nicht verhanden sein, da wir nur löschen und erneutes setzen zulassen.
+    // Wenn doch einmal ein Fehler passieren sollte, sind wir hier abgesichert, indem wir den gefundenen
+    // `WeekDay` ändern und somit doppelte Einträge vermeiden!
+    if (tryFindWeekDay) {
+      const findRecipe = await this.recipeService.getRecipeById(data.recipeId);
+      tryFindWeekDay.recipe = findRecipe;
+      return await this.weekdayRepository.save(tryFindWeekDay, {
+        reload: true,
+      });
+    }
+
+    const newWeekDay = this.weekdayRepository.create({ date });
+    const findRecipe = await this.recipeService.getRecipeById(data.recipeId);
+
+    newWeekDay.recipe = findRecipe;
+    return await this.weekdayRepository.save(newWeekDay, { reload: true });
+  }
+
+  async removeRecipeFromWeekDay(date: Date, recipeId: string) {
+    const findRecipe = await this.recipeService.getRecipeById(recipeId);
+    return await this.weekdayRepository.delete({ date, recipe: findRecipe });
   }
 
   //#region  Helper
