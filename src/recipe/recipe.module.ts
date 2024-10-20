@@ -6,6 +6,7 @@ import * as path from 'path';
 import { Recipe } from 'src/entities/recipe.entity';
 import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
+import { WeekDay } from 'src/entities/week-day.entity';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { RecipeService } from './recipe.service';
         }),
       }),
     }),
-    TypeOrmModule.forFeature([Recipe]),
+    TypeOrmModule.forFeature([Recipe, WeekDay]),
   ],
   controllers: [RecipeController],
   providers: [RecipeService],

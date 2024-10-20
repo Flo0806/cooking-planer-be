@@ -2,12 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RecipeBody } from 'src/common/interfaces/body.interface';
 import { Recipe } from 'src/entities/recipe.entity';
+import { WeekDay } from 'src/entities/week-day.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class RecipeService {
   constructor(
     @InjectRepository(Recipe) private recipeRepo: Repository<Recipe>,
+    @InjectRepository(WeekDay) private weekdayRepo: Repository<WeekDay>,
   ) {}
 
   /**
@@ -61,5 +63,11 @@ export class RecipeService {
     }
 
     return await this.recipeRepo.save(updateRecipe, { reload: true });
+  }
+
+  async softDeleteRecipe(id: string) {
+    const findRecipe = await this.getRecipeById(id);
+    await this.weekdayRepo.delete({ recipe: findRecipe });
+    return await this.recipeRepo.softRemove(findRecipe);
   }
 }

@@ -13,15 +13,6 @@ export class WeekService {
     @InjectRepository(WeekDay) private weekdayRepository: Repository<WeekDay>,
   ) {}
 
-  // Hilfsfunktion, um den Montag einer Woche zu berechnen
-  private getMonday(date: Date): Date {
-    const day = date.getDay() || 7; // Falls Sonntag (0), auf 7 setzen
-    if (day !== 1) {
-      date.setHours(-24 * (day - 1)); // Zurück auf Montag
-    }
-    return date;
-  }
-
   // Funktion, um die aktuelle und nächste Woche zurückzugeben
   async getWeeks(): Promise<WeekData[][]> {
     const today = new Date();
@@ -133,6 +124,15 @@ export class WeekService {
         recipeId: day.recipe?.id || undefined, // recipeId setzen, wenn vorhanden
       };
     });
+  }
+
+  // Hilfsfunktion, um den Montag einer Woche zu berechnen
+  private getMonday(date: Date): Date {
+    const day = date.getDay() || 7; // Falls Sonntag (0), auf 7 setzen
+    if (day !== 1) {
+      date.setHours(-24 * (day - 1)); // Zurück auf Montag
+    }
+    return date;
   }
   //#endregion
 }

@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  DeleteDateColumn,
+} from 'typeorm';
 import { WeekDay } from './week-day.entity';
 
 @Entity() // Tabelle wird "recipes" genannt
@@ -30,4 +36,7 @@ export class Recipe {
   // Beziehung zu WeekDay (Ein Rezept kann zu mehreren WeekDays gehören)
   @OneToMany(() => WeekDay, (weekday) => weekday.recipe, { cascade: true })
   weekDays: WeekDay[];
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -43,5 +44,10 @@ export class RecipeController {
     @Body() body: RecipeBody, // Restliche Rezeptdaten
   ) {
     return this.recipeService.updateRecipe(id, body, image); // Ohne Bild
+  }
+
+  @Delete(':id')
+  async softDeleteRecipe(@Param('id') id: string) {
+    return await this.recipeService.softDeleteRecipe(id);
   }
 }
